@@ -2,6 +2,7 @@ require("dotenv").config();
 
 const express = require("express");
 const multer = require("multer");
+require("pdf-parse/worker");
 const { PDFParse } = require("pdf-parse");
 const { GoogleGenAI } = require("@google/genai");
 const cors = require("cors");
@@ -50,6 +51,8 @@ app.post(
     const result = await parser.getText();
 
     const resumeText = result.text;
+
+    await parser.destroy();
     const jobDescription = req.body.jobDescription;
 
     const prompt = `
