@@ -14,7 +14,7 @@ function Dashboard() {
 
       try {
         const response = await fetch(
-          "http://localhost:5000/api/analyses",
+          "/api/analyses",
           {
             headers: {
               Authorization: `Bearer ${token}`
@@ -52,7 +52,7 @@ function Dashboard() {
 
     try {
       const response = await fetch(
-        `http://localhost:5000/api/analyses/${id}`,
+        `/api/analyses/${id}`,
         {
           method: "DELETE",
           headers: {
