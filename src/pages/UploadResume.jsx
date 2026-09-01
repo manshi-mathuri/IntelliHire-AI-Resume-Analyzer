@@ -32,7 +32,7 @@ function UploadResume() {
       formData.append("resume", selectedFile);
       formData.append("jobDescription", jobDescription);
 
-      const response = await fetch(/api/analyze, {
+      const response = await fetch("/api/analyze", {
         method: "POST",
 
         headers: {
