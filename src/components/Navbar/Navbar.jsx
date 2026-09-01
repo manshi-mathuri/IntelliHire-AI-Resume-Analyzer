@@ -90,7 +90,7 @@ function Navbar() {
               <>
                 <button
                   onClick={() => navigate("/login")}
-                  className="px-3 py-2 text-gray-700 font-medium"
+                  className="px-3 py-2 rounded-lg text-gray-700 font-medium hover:text-blue-600 hover:bg-blue-50 transition duration-200 cursor-pointer"
                 >
                   Login
                 </button>

@@ -9,30 +9,42 @@ function Login() {
   const navigate = useNavigate();
 
   async function handleLogin() {
-    const response = await fetch("/api/auth/login", 
-      {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        email,
-        password
-      })
-    });
+    try {
+      setMessage("");
 
-    const data = await response.json();
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          email,
+          password
+        })
+      });
 
-    if (!response.ok) {
-      setMessage(data.message);
-      return;
+      const data = await response.json();
+
+      if (!response.ok) {
+        setMessage(data.message || "Login failed");
+        return;
+      }
+
+      localStorage.setItem("token", data.token);
+
+      setMessage("Login successful");
+
+      navigate("/upload");
+
+    } catch (error) {
+      console.error("Login error:", error);
+      setMessage("Something went wrong. Please try again.");
     }
+  }
 
-    localStorage.setItem("token", data.token);
-
-    setMessage("Login successful");
-
-    navigate("/upload");
+  function handleSubmit(e) {
+    e.preventDefault();
+    handleLogin();
   }
 
   return (
@@ -48,13 +60,9 @@ function Login() {
           Login to continue to IntelliHire
         </p>
 
-        <form onSubmit={(e) => {
-          e.preventDefault();
-          handleLogin();
-        }}
-        >
+        <form onSubmit={handleSubmit}>
 
-
+          {/* Email */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Email
@@ -65,10 +73,12 @@ function Login() {
               placeholder="Enter your email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              required
               className="w-full px-4 py-3 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-blue-500 mb-5"
             />
           </div>
 
+          {/* Password */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Password
@@ -79,22 +89,29 @@ function Login() {
               placeholder="Enter your password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              required
               className="w-full px-4 py-3 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
+
+          {/* Login Button */}
           <button
             type="submit"
             className="w-full mt-6 bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition duration-200 cursor-pointer"
           >
             Login
           </button>
+
         </form>
-        {/* email input */}
 
-        {/* password input */}
+        {/* Message */}
+        {message && (
+          <p className="text-center mt-4 text-sm text-gray-600">
+            {message}
+          </p>
+        )}
 
-
-
+        {/* Signup */}
         <p className="text-center text-gray-500 mt-6">
           Don't have an account?{" "}
           <span
@@ -104,12 +121,6 @@ function Login() {
             Sign Up
           </span>
         </p>
-
-        {message && (
-          <p className="text-center mt-4 text-sm text-gray-600">
-            {message}
-          </p>
-        )}
 
       </div>
     </div>
