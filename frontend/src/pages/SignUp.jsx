@@ -16,7 +16,7 @@ function Signup() {
 
 
     try {
-      fetch("https://intellihire-ai-resume-analyzer.onrender.com/api/auth/register", {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/register`, {
         method: "POST",
 
         headers: {
@@ -56,6 +56,8 @@ function Signup() {
       setIsLoading(false);
       setIsError(true);
       setMessage("Something went wrong. Please try again.");
+    } finally {
+      setIsLoading(false);
     }
   }
 

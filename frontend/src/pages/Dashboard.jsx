@@ -14,7 +14,7 @@ function Dashboard() {
 
       try {
         const response = await fetch(
-          "/api/analyses",
+          `${import.meta.env.VITE_API_URL}/api/analyses`,
           {
             headers: {
               Authorization: `Bearer ${token}`
@@ -52,7 +52,7 @@ function Dashboard() {
 
     try {
       const response = await fetch(
-        `/api/analyses/${id}`,
+        `${import.meta.env.VITE_API_URL}/api/analyses/${id}`,
         {
           method: "DELETE",
           headers: {

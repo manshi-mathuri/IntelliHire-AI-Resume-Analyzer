@@ -10,7 +10,7 @@ function VerifyOTP() {
   const navigate = useNavigate();
 
   async function handleResendOTP() {
-    const response = await fetch("/api/auth/resend-otp", {
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/resend-otp`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -28,7 +28,7 @@ function VerifyOTP() {
   async function handleSubmit(e) {
     e.preventDefault();
 
-    const response = await fetch("/api/auth/verify-otp", {
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/verify-otp`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"

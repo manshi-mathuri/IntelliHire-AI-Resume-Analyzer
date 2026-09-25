@@ -13,7 +13,7 @@ function Profile() {
 
       try {
         const response = await fetch(
-          "/api/auth/profile",
+          `${import.meta.env.VITE_API_URL}/api/auth/profile`,
           {
             headers: {
               Authorization: `Bearer ${token}`

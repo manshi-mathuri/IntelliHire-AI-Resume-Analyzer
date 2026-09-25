@@ -27,11 +27,21 @@ mongoose.connect(process.env.MONGODB_URI)
 
 const upload = multer();
 
+const allowedOrigins = [
+  process.env.FRONTEND_URL,
+  "http://localhost:5173",
+  "http://localhost:5174",
+  "https://intelli-hire-ai-resume-analyzerrrr.vercel.app"
+].filter(Boolean);
+
 app.use(cors({
-  origin: [
-    "http://localhost:5173",
-    "https://intelli-hire-ai-resume-analyzerrrr.vercel.app"
-  ]
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin) || /^http:\/\/localhost:\d+$/.test(origin)) {
+      return callback(null, true);
+    }
+
+    return callback(new Error("Origin not allowed by CORS"));
+  }
 }));
 
 app.use(express.json());
