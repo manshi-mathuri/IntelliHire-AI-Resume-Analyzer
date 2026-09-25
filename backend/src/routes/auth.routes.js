@@ -1,7 +1,9 @@
 const {
   registerUser,
   loginUser,
-  getProfile
+  getProfile,
+  verifyOTP,
+  resendOTP
 } = require("../controllers/auth.controller");
 
 const authMiddleware = require("../middleware/auth.middleware");
@@ -13,6 +15,10 @@ const router = express.Router();
 router.post("/register", registerUser);
 
 router.post("/login", loginUser);
+
+router.post("/verify-otp", verifyOTP);
+
+router.post("/resend-otp", resendOTP);
 
 router.get("/profile", authMiddleware, getProfile);
 

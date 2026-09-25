@@ -8,6 +8,7 @@ import Dashboard from "./pages/Dashboard";
 import ATSReport from "./pages/ATSReport";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Profile from "./pages/Profile";
+import VerifyOTP from "./pages/VerifyOTP";
 
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
     <Routes>
 
       <Route path="/" element={<LandingPage />} />
+
 
       <Route
         path="/upload"
@@ -26,8 +28,8 @@ function App() {
       />
 
       <Route path="/login" element={<Login />} />
-
       <Route path="/signup" element={<SignUp />} />
+      <Route path="/verify-otp" element={<VerifyOTP />} />
 
       <Route
         path="/dashboard"

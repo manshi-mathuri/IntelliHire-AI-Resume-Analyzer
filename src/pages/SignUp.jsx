@@ -7,10 +7,14 @@ function Signup() {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const [isError, setIsError] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
 
   async function handleSignup() {
+    setIsLoading(true);
+
+
     try {
       const response = await fetch("/api/auth/register", {
         method: "POST",
@@ -37,6 +41,11 @@ function Signup() {
         setName("");
         setEmail("");
         setPassword("");
+
+        navigate("/verify-otp", {
+          state: { email: email }
+        });
+
       } else {
         setIsError(true);
       }
@@ -44,6 +53,7 @@ function Signup() {
     } catch (error) {
       console.error(error);
 
+      setIsLoading(false);
       setIsError(true);
       setMessage("Something went wrong. Please try again.");
     }
@@ -120,9 +130,17 @@ function Signup() {
           {/* Signup Button */}
           <button
             type="submit"
-            className="w-full mt-6 bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition duration-200 cursor-pointer"
+            disabled={isLoading}
+            className="w-full mt-6 bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition duration-200 cursor-pointer disabled:opacity-70"
           >
-            Signup
+            {isLoading ? (
+              <div className="flex items-center justify-center gap-2">
+                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                Creating Account...
+              </div>
+            ) : (
+              "Signup"
+            )}
           </button>
 
         </form>
@@ -130,9 +148,8 @@ function Signup() {
         {/* Success / Error Message */}
         {message && (
           <p
-            className={`text-center mt-4 font-medium ${
-              isError ? "text-red-600" : "text-green-600"
-            }`}
+            className={`text-center mt-4 font-medium ${isError ? "text-red-600" : "text-green-600"
+              }`}
           >
             {message}
           </p>
