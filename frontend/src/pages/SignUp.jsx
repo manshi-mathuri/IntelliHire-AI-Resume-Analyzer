@@ -16,7 +16,7 @@ function Signup() {
 
 
     try {
-      const response = await fetch("/api/auth/register", {
+      fetch("https://intellihire-ai-resume-analyzer.onrender.com/api/auth/register", {
         method: "POST",
 
         headers: {
