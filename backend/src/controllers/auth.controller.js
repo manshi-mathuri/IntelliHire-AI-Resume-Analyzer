@@ -1,6 +1,6 @@
 const UserModel = require("../models/user.model");
 const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken")
+const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 
 const transporter = nodemailer.createTransport({
@@ -11,6 +11,8 @@ const transporter = nodemailer.createTransport({
   }
 });
 
+
+// ================= REGISTER USER =================
 
 async function registerUser(req, res) {
 
@@ -37,12 +39,18 @@ async function registerUser(req, res) {
     otp: otp,
     otpExpires: otpExpires
   });
-  try {
-    const info = await transporter.sendMail({
-      from: process.env.EMAIL_USER,
-      to: email,
-      subject: "Verify your IntelliHire email",
-      html: `
+
+  // Send response immediately to frontend
+  res.status(201).json({
+    message: "User registered successfully"
+  });
+
+  // Send email in background
+  transporter.sendMail({
+    from: process.env.EMAIL_USER,
+    to: email,
+    subject: "Verify your IntelliHire email",
+    html: `
       <div style="font-family: Arial, sans-serif; max-width: 500px; margin: auto; padding: 30px; border: 1px solid #ddd; border-radius: 10px;">
         
         <h2 style="color: #2563eb; text-align: center;">
@@ -78,19 +86,20 @@ async function registerUser(req, res) {
 
       </div>
     `
+  })
+    .then((info) => {
+      console.log("Email sent:", info.response);
+    })
+    .catch((error) => {
+      console.log("Email sending failed:", error);
     });
-
-    console.log("Email sent:", info.response);
-  }
-  catch (error) {
-    console.log("Email sending failed:", error);
-  }
-  return res.status(201).json({
-    message: "User registered successfully"
-  });
 }
 
+
+// ================= LOGIN USER =================
+
 async function loginUser(req, res) {
+
   const { email, password } = req.body;
 
   const user = await UserModel.findOne({ email: email });
@@ -107,7 +116,10 @@ async function loginUser(req, res) {
     });
   }
 
-  const isPasswordCorrect = await bcrypt.compare(password, user.password);
+  const isPasswordCorrect = await bcrypt.compare(
+    password,
+    user.password
+  );
 
   if (!isPasswordCorrect) {
     return res.status(400).json({
@@ -127,7 +139,12 @@ async function loginUser(req, res) {
     token: token
   });
 }
+
+
+// ================= VERIFY OTP =================
+
 async function verifyOTP(req, res) {
+
   const { email, otp } = req.body;
 
   const user = await UserModel.findOne({ email: email });
@@ -160,7 +177,12 @@ async function verifyOTP(req, res) {
     message: "Email verified successfully"
   });
 }
+
+
+// ================= RESEND OTP =================
+
 async function resendOTP(req, res) {
+
   const { email } = req.body;
 
   const user = await UserModel.findOne({ email: email });
@@ -183,37 +205,37 @@ async function resendOTP(req, res) {
     to: email,
     subject: "Your new IntelliHire verification OTP",
     html: `
-    <div style="font-family: Arial, sans-serif; max-width: 500px; margin: auto; padding: 30px; border: 1px solid #ddd; border-radius: 10px;">
+      <div style="font-family: Arial, sans-serif; max-width: 500px; margin: auto; padding: 30px; border: 1px solid #ddd; border-radius: 10px;">
 
-      <h2 style="color: #2563eb; text-align: center;">
-        IntelliHire
-      </h2>
+        <h2 style="color: #2563eb; text-align: center;">
+          IntelliHire
+        </h2>
 
-      <p>Hello ${user.name},</p>
+        <p>Hello ${user.name},</p>
 
-      <p>
-        Here is your new email verification OTP:
-      </p>
+        <p>
+          Here is your new email verification OTP:
+        </p>
 
-      <h1 style="text-align: center; letter-spacing: 8px; color: #2563eb;">
-        ${otp}
-      </h1>
+        <h1 style="text-align: center; letter-spacing: 8px; color: #2563eb;">
+          ${otp}
+        </h1>
 
-      <p>
-        This OTP is valid for <strong>5 minutes</strong>.
-      </p>
+        <p>
+          This OTP is valid for <strong>5 minutes</strong>.
+        </p>
 
-      <p>
-        If you did not request this OTP, you can safely ignore this email.
-      </p>
+        <p>
+          If you did not request this OTP, you can safely ignore this email.
+        </p>
 
-      <p>
-        Regards,<br>
-        IntelliHire Team
-      </p>
+        <p>
+          Regards,<br>
+          IntelliHire Team
+        </p>
 
-    </div>
-  `
+      </div>
+    `
   });
 
   return res.status(200).json({
@@ -221,7 +243,11 @@ async function resendOTP(req, res) {
   });
 }
 
+
+// ================= GET PROFILE =================
+
 async function getProfile(req, res) {
+
   const user = await UserModel.findById(req.userId);
 
   if (!user) {
@@ -235,6 +261,10 @@ async function getProfile(req, res) {
     email: user.email
   });
 }
+
+
+// ================= EXPORTS =================
+
 module.exports = {
   registerUser,
   loginUser,
