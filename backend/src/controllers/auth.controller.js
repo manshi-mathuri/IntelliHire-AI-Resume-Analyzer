@@ -39,10 +39,9 @@ async function registerUser(req, res) {
   });
   try {
     const info = await transporter.sendMail({
-      from: `"IntelliHire" <${process.env.EMAIL_USER}>`,
+      from: process.env.EMAIL_USER,
       to: email,
       subject: "Verify your IntelliHire email",
-      text: `Your IntelliHire verification OTP is ${otp}. It is valid for 5 minutes.`,
       html: `
       <div style="font-family: Arial, sans-serif; max-width: 500px; margin: auto; padding: 30px; border: 1px solid #ddd; border-radius: 10px;">
         
@@ -179,11 +178,10 @@ async function resendOTP(req, res) {
 
   await user.save();
 
-   await transporter.sendMail({
-    from: `"IntelliHire" <${process.env.EMAIL_USER}>`,
+  await transporter.sendMail({
+    from: process.env.EMAIL_USER,
     to: email,
     subject: "Your new IntelliHire verification OTP",
-    text: `Your new IntelliHire verification OTP is ${otp}. It is valid for 5 minutes.`,
     html: `
     <div style="font-family: Arial, sans-serif; max-width: 500px; margin: auto; padding: 30px; border: 1px solid #ddd; border-radius: 10px;">
 
