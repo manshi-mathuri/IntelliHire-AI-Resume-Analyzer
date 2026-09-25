@@ -28,7 +28,10 @@ mongoose.connect(process.env.MONGODB_URI)
 const upload = multer();
 
 app.use(cors({
-  origin: "http://localhost:5173"
+  origin: [
+    "http://localhost:5173",
+    "https://intelli-hire-ai-resume-analyzerrrr.vercel.app"
+  ]
 }));
 
 app.use(express.json());
@@ -154,6 +157,8 @@ app.delete("/api/analyses/:id", authMiddleware, async (req, res) => {
     });
   }
 });
-app.listen(5000, () => {
-  console.log("server is running on port 5000");
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => {
+  console.log(`server is running on port ${PORT}`);
 });
